@@ -1,5 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import {Response} from 'express'
+import multer from 'multer'
 
 export const jsonRes = (
   res: Response,
@@ -15,3 +16,19 @@ export const jsonRes = (
 }
 
 export const prisma = new PrismaClient()
+
+export const uploadAvatar = multer({
+  storage: multer.diskStorage({
+    destination: './static/avatar',
+    filename: (_, file, cb) => cb(null, `avatar-${Date.now()}-${file.originalname}`),
+  }),
+  dest: 'avatar',
+})
+
+export const uploadCompany = multer({
+  storage: multer.diskStorage({
+    destination: './static/company',
+    filename: (_, file, cb) => cb(null, `company-${Date.now()}-${file.originalname}`),
+  }),
+  dest: 'company',
+})

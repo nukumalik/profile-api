@@ -1,6 +1,7 @@
 import {Experience, Profile} from '@prisma/client'
 import {Request, Response} from 'express'
 import {jsonRes, prisma} from '../../utils'
+import fs from 'fs'
 
 export const controllers = {
   // list of experience
@@ -43,18 +44,19 @@ export const controllers = {
       const profile: Profile | null = await prisma.profile.findFirst()
       if (!profile) return jsonRes(res, 404, 'Profile not found')
 
-      const {companyName, companyLogo, jobTitle, jobDescription, startDate, endDate, isPresent} =
-        req.body
+      const {companyName, jobTitle, jobDescription, startDate, endDate, isPresent} = req.body
 
       const data: any = {
         companyName,
-        companyLogo,
+        companyLogo: '',
         jobTitle,
         jobDescription,
         startDate,
         endDate,
         isPresent,
       }
+
+      if (req.file) data.companyLogo = req.file.filename
 
       const created = await prisma.experience.create({data})
 
@@ -71,17 +73,19 @@ export const controllers = {
       const experience: Experience | null = await prisma.experience.findUnique({where: {id}})
       if (!experience) return jsonRes(res, 404, 'Experience not found')
 
-      const {companyName, companyLogo, jobTitle, jobDescription, startDate, endDate, isPresent} =
-        req.body
+      const {companyName, jobTitle, jobDescription, startDate, endDate, isPresent} = req.body
 
       const data: any = {}
       if (companyName) data.companyName = companyName
-      if (companyLogo) data.companyLogo = companyLogo
       if (jobTitle) data.jobTitle = jobTitle
       if (jobDescription) data.jobDescription = jobDescription
       if (startDate) data.startDate = startDate
       if (endDate) data.endDate = endDate
       if (isPresent) data.isPresent = isPresent
+      if (req.file) {
+        fs.rmSync(`static/company/${experience.companyLogo}`)
+        data.companyLogo = req.file.filename
+      }
 
       const updated = await prisma.experience.update({where: {id}, data})
 

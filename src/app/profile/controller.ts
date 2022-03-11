@@ -1,6 +1,7 @@
 import {Experience, Profile} from '@prisma/client'
 import {Request, Response} from 'express'
 import {jsonRes, prisma} from '../../utils'
+import fs from 'fs'
 
 export const controllers = {
   // detail of profile
@@ -42,10 +43,13 @@ export const controllers = {
       const profile: Profile | null = await prisma.profile.findFirst()
       if (!profile) return jsonRes(res, 404, 'Profile not found')
 
-      const {name, avatar, age} = req.body
+      const {name, age} = req.body
       const data: any = {}
       if (name) data.name = name
-      if (avatar) data.avatar = avatar
+      if (req.file) {
+        fs.rmSync(`static/avatar/${profile.avatar}`)
+        data.avatar = req.file.filename
+      }
       if (age) data.age = age
 
       const updated = await prisma.profile.update({where: {id: profile?.id}, data})
