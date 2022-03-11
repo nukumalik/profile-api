@@ -15,7 +15,6 @@ export const controllers = {
       if (!profile) return jsonRes(res, 400, 'Profile not found')
 
       const {username, password} = req.body
-      console.log({username, password})
       if (username === 'admin' && password === 'admin') {
         const token = jwt.sign(profile, 'this is very strong secret, lol!', {expiresIn: 3600})
         return jsonRes(res, 200, 'Success to create profile', {token})
