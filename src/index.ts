@@ -2,11 +2,13 @@ import express from 'express'
 import path from 'path'
 import {api} from './app'
 import {middlewares} from './middlewares'
+import {jwtStrategy} from './utils/passport'
 
 const app = express()
 
 // Middlewares
 app.use(middlewares)
+jwtStrategy()
 
 // API
 app.use('/api/v1', api)
