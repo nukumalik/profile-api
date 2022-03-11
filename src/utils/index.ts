@@ -1,3 +1,4 @@
+import {PrismaClient} from '@prisma/client'
 import {Response} from 'express'
 
 export const jsonRes = (
@@ -12,3 +13,5 @@ export const jsonRes = (
   if (data) result.data = data
   return res.status(code).json(result)
 }
+
+export const prisma = new PrismaClient()
