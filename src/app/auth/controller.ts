@@ -2,11 +2,15 @@ import {Experience, Profile} from '@prisma/client'
 import {Request, Response} from 'express'
 import {jsonRes, prisma} from '../../utils'
 import jwt from 'jsonwebtoken'
+import {validationResult} from 'express-validator'
 
 export const controllers = {
   // Create new profile
   login: async (req: Request, res: Response) => {
     try {
+      const errors = validationResult(req)
+      if (errors) return jsonRes(res, 400, 'Failed to login', null, errors)
+
       const profile: Profile | null = await prisma.profile.findFirst()
       if (!profile) return jsonRes(res, 400, 'Profile not found')
 
