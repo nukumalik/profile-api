@@ -45,18 +45,16 @@ export const controllers = {
       if (!profile) return jsonRes(res, 404, 'Profile not found')
 
       const {companyName, jobTitle, jobDescription, startDate, endDate, isPresent} = req.body
-
       const data: any = {
         companyName,
-        companyLogo: '',
+        companyLogo: `${req.headers.host}/${req?.file?.filename}`,
         jobTitle,
         jobDescription,
-        startDate,
-        endDate,
-        isPresent,
+        startDate: new Date(startDate),
+        profileId: profile.id,
       }
-
-      if (req.file) data.companyLogo = req.file.filename
+      if (endDate) data.endDate = new Date(endDate)
+      if (isPresent) data.isPresent = isPresent === 'true' ? true : false
 
       const created = await prisma.experience.create({data})
 
@@ -83,8 +81,10 @@ export const controllers = {
       if (endDate) data.endDate = endDate
       if (isPresent) data.isPresent = isPresent
       if (req.file) {
-        fs.rmSync(`static/company/${experience.companyLogo}`)
-        data.companyLogo = req.file.filename
+        let image: any = experience.companyLogo.split('/')
+        image = image[image.length - 1]
+        fs.rmSync(`static/company/${image}`)
+        data.companyLogo = `${req.headers.host}/${req.file.filename}`
       }
 
       const updated = await prisma.experience.update({where: {id}, data})

@@ -22,12 +22,12 @@ export const controllers = {
       const profile: Profile | null = await prisma.profile.findFirst()
       if (profile) return jsonRes(res, 404, 'Profile meet maximum capacity')
 
-      const {name, avatar, age} = req.body
+      const {name, age} = req.body
       const created = await prisma.profile.create({
         data: {
           age,
           name,
-          avatar,
+          avatar: `${req.headers.host}/${req?.file?.path}`,
         },
       })
 
@@ -47,8 +47,10 @@ export const controllers = {
       const data: any = {}
       if (name) data.name = name
       if (req.file) {
-        fs.rmSync(`static/avatar/${profile.avatar}`)
-        data.avatar = req.file.filename
+        let image: any = profile.avatar.split('/')
+        image = image[image.length - 1]
+        fs.rmSync(`static/avatar/${image}`)
+        data.avatar = `${req.headers.host}/${req.file.path}`
       }
       if (age) data.age = age
 
