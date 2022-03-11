@@ -1,4 +1,4 @@
-import {Experience, Profile} from '@prisma/client'
+import {Profile} from '@prisma/client'
 import {Request, Response} from 'express'
 import {jsonRes, prisma} from '../../utils'
 import jwt from 'jsonwebtoken'
