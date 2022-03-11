@@ -54,7 +54,7 @@ export const controllers = {
         profileId: profile.id,
       }
       if (endDate) data.endDate = new Date(endDate)
-      if (isPresent) data.isPresent = isPresent === 'true' ? true : false
+      if (isPresent) data.isPresent = String(isPresent).toLocaleLowerCase() ? true : false
 
       const created = await prisma.experience.create({data})
 
@@ -77,9 +77,10 @@ export const controllers = {
       if (companyName) data.companyName = companyName
       if (jobTitle) data.jobTitle = jobTitle
       if (jobDescription) data.jobDescription = jobDescription
-      if (startDate) data.startDate = startDate
-      if (endDate) data.endDate = endDate
-      if (isPresent) data.isPresent = isPresent
+      if (startDate) data.startDate = new Date(startDate)
+      if (endDate) data.endDate = new Date(endDate)
+      if (isPresent)
+        data.isPresent = String(isPresent).toLocaleLowerCase() === 'true' ? true : false
       if (req.file) {
         let image: any = experience.companyLogo.split('/')
         image = image[image.length - 1]
