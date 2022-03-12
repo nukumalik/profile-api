@@ -1,3 +1,3 @@
 web: yarn install
-web: yarn build
+web: npx tsc
 web: yarn start
