@@ -9,7 +9,7 @@ export const controllers = {
   login: async (req: Request, res: Response) => {
     try {
       const errors = validationResult(req)
-      if (errors) return jsonRes(res, 400, 'Failed to login', null, errors)
+      if (!errors.isEmpty) return jsonRes(res, 400, 'Failed to login', null, errors)
 
       const profile: Profile | null = await prisma.profile.findFirst()
       if (!profile) return jsonRes(res, 400, 'Profile not found')
@@ -22,7 +22,7 @@ export const controllers = {
 
       return jsonRes(res, 400, 'Username or Password was invalid')
     } catch (error) {
-      return jsonRes(res, 500, 'Failed to create profile', null, error)
+      return jsonRes(res, 500, 'Failed to login', null, error)
     }
   },
 }

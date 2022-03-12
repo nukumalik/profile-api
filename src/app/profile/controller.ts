@@ -21,7 +21,7 @@ export const controllers = {
   create: async (req: Request, res: Response) => {
     try {
       const errors = validationResult(req)
-      if (errors) return jsonRes(res, 400, 'Failed to login', null, errors)
+      if (!errors.isEmpty) return jsonRes(res, 400, 'Failed to create profile', null, errors)
 
       const profile: Profile | null = await prisma.profile.findFirst()
       if (profile) return jsonRes(res, 404, 'Profile meet maximum capacity')
