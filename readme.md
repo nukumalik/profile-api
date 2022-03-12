@@ -12,6 +12,12 @@ $ git clone https://github.com/nukumalik/profile-api.git
 $ cd profile-api && npm i
 ```
 
+#### Rename Env File
+```bash
+$ mv ./.env.example ./.env
+```
+Adjust port with with you like
+
 #### Start Dev
 ```bash
 # Using NPM
