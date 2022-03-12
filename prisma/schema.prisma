@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("file:../database.db")
+  url      = "file:../database.db"
 }
 
 model Experience {
